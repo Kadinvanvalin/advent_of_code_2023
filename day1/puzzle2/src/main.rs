@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
-use std::str::Chars;
 #[cfg(test)]
 mod tests {
     // Note this useful idiom: importing names from outer (for mod tests) scope.
@@ -31,6 +30,11 @@ mod tests {
     fn test_twone() {
         assert_eq!(parse("twone".to_string()), "21".to_string());
     }
+
+    #[test]
+    fn test_oneone() {
+        assert_eq!(parse("oneone".to_string()), "11".to_string());
+    }
 }
 struct FoundDigit {
     index: usize,
@@ -39,15 +43,83 @@ struct FoundDigit {
 fn parse(input: String) -> String {
     let mut result = String::new();
     let mut tokens = Vec::new();
-    if let Some(one) = input.find("one") {
-        tokens.push(FoundDigit { index: one, token: "1".to_string()})
-    }
 
-    if let Some(two) = input.find("two") {
-        tokens.push(FoundDigit { index: two, token: "2".to_string()})
-    }
+    for (index, _) in input.match_indices("one").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "1".to_string()})
+    };
+
+    for (index, _) in input.match_indices("two").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "2".to_string()})
+    };
+
+    for (index, _) in input.match_indices("three").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "3".to_string()})
+    };
+
+    for (index, _) in input.match_indices("four").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "4".to_string()})
+    };
+
+    for (index, _) in input.match_indices("five").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "5".to_string()})
+    };
+
+
+    for (index, _) in input.match_indices("six").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "6".to_string()})
+    };
+    
+    for (index, _) in input.match_indices("seven").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "7".to_string()})
+    };
+
+    for (index, _) in input.match_indices("eight").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "8".to_string()})
+    };
+
+    for (index, _) in input.match_indices("nine").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "9".to_string()})
+    };
+
+    for (index, _) in input.match_indices("1").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "1".to_string()})
+    };
+
+    for (index, _) in input.match_indices("2").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "2".to_string()})
+    };
+
+    for (index, _) in input.match_indices("3").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "3".to_string()})
+    };
+
+    for (index, _) in input.match_indices("4").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "4".to_string()})
+    };
+
+    for (index, _) in input.match_indices("5").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "5".to_string()})
+    };
+
+
+    for (index, _) in input.match_indices("6").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "6".to_string()})
+    };
+    
+    for (index, _) in input.match_indices("7").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "7".to_string()})
+    };
+
+    for (index, _) in input.match_indices("8").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "8".to_string()})
+    };
+
+    for (index, _) in input.match_indices("9").collect::<Vec<_>>() {
+        tokens.push(FoundDigit { index, token: "9".to_string()})
+    };
     tokens.sort_by(|a, b| a.index.cmp(&b.index));
-    for token in tokens {
+    for token in tokens { // instead of iterating you should do this recursivly and reduce the
+        // string each time  
         result.push_str(&token.token);
     }
     if result.is_empty() {
@@ -63,17 +135,16 @@ fn main() {
         let mut count = 0;
         for line in lines {
             if let Ok(code) = line {
-                let chars = code.chars();
-                let ints = find_two_ints(chars);
+                let ints = find_two_ints(code.clone());
                 count += ints;
                 println!("{}:: {}:: count:: {}", code, ints, count);
             }
         }
     }
 }
-fn find_two_ints(chars: Chars<'_>) -> i32 {
-    let mut x = chars
-        .filter(|a| a.is_digit(10));
+fn find_two_ints(string: String) -> i32 {
+    let binding = parse(string);
+    let mut x = binding.chars();
     let (first, last) = match (x.next(), x.last()) {
         (Some(a), Some(b)) => (a, b),
         (Some(a), None) => (a, a),
