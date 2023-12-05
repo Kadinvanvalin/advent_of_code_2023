@@ -29,9 +29,11 @@ struct Card {
 }
 
 fn check_cards(cards: Vec<String>) -> i32 {
+    let mut total_points = 0;
     for card in cards {
+        let mut points: i32 = 0;
         let card = card.split('|');
-        let winners: Vec<&str> = card
+        let winners: Vec<i32> = card
             .clone()
             .next()
             .expect("should have winners")
@@ -40,19 +42,35 @@ fn check_cards(cards: Vec<String>) -> i32 {
             .expect("should have numbers")
             .split(" ")
             .filter(|&x| !x.is_empty())
+            .map(|x| x.parse::<i32>().unwrap())
             .collect();
-        let have_numbers: Vec<&str> = card
+        let mut win_map: HashMap<i32, i32> = HashMap::new();
+        for num in &winners {
+            win_map.insert(*num, 1);
+        }
+        let have_numbers: Vec<i32> = card
             .clone()
             .last()
             
             .expect("should have have_numbers")
             .split(" ")
             .filter(|&x| !x.is_empty())
+            .map(|x| x.parse::<i32>().unwrap())
             .collect(); 
-        
-    println!("winners: {:?}, have_numbers: {:?}", winners, have_numbers);
+       for number in &have_numbers {
+           if winners.contains(&number) {
+                if points == 0 {
+                    points = 1;
+                } else {
+                    points = points * 2;
+                }
+                println!("found a winner!: {}:: new points {}", number, points);
+            }
+        }
+        total_points += points;
+    println!("winners: {:?}, have_numbers: {:?}, points: {}", winners, have_numbers, points);
     }
-    return 12;
+    return total_points;
 }
 
 fn main() {
