@@ -21,19 +21,50 @@ mod tests {
         assert_eq!(check_cards(card), 13);
     }
 }
-fn check_cards(card: Vec<String>) -> i32 {
+
+#[derive(Debug)]
+struct Card {
+    winning_numbers: Vec<String>,
+    numbers: Vec<String>,
+}
+
+fn check_cards(cards: Vec<String>) -> i32 {
+    for card in cards {
+        let card = card.split('|');
+        let winners: Vec<&str> = card
+            .clone()
+            .next()
+            .expect("should have winners")
+            .split(":")
+            .last()
+            .expect("should have numbers")
+            .split(" ")
+            .filter(|&x| !x.is_empty())
+            .collect();
+        let have_numbers: Vec<&str> = card
+            .clone()
+            .last()
+            
+            .expect("should have have_numbers")
+            .split(" ")
+            .filter(|&x| !x.is_empty())
+            .collect(); 
+        
+    println!("winners: {:?}, have_numbers: {:?}", winners, have_numbers);
+    }
     return 12;
 }
+
 fn main() {
-    let mut schematic = Vec::new();
+    let mut input = Vec::new();
     if let Ok(lines) = read_lines( "./input.txt") {
         for line in lines {
             if let Ok(code) = line {
-                schematic.push(code);
+                input.push(code);
             }
         }
     }
-    println!("{:?}", schematic);
+    println!("{:?}", check_cards(input));
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> 
